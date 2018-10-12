@@ -1,1 +1,1 @@
-# ansible-engine
+This repo is a copy of all of the Ansible playbooks we use for our IAS Ansible demo of Red Hat Ansible Engine, NetApp Cloud ONTAP, and Amazon EC2. Feel free to use to help you on your Ansible journey. Thanks!
