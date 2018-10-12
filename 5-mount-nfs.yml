@@ -1,0 +1,26 @@
+- hosts: tag_Env_Demo
+  become: yes
+  gather_facts: yes
+
+  vars:
+    aws_profile: default
+    aws_region: us-east-1
+    nfs_package: nfs-utils
+    rhs_mount_dir: /rhs
+
+  tasks:
+    - name: Ensure NFS is installed.
+      package: "name={{ nfs_package }} state=installed"
+
+    - name: Ensure mount directory exists.
+      file:
+        path: "{{ rhs_mount_dir }}"
+        state: directory
+        mode: 0777
+
+    - name: Mount NFS volume
+      mount: 
+        path: /rhs
+        src: '10.0.1.117:/DemoClone'
+        fstype: nfs
+        state: mounted
