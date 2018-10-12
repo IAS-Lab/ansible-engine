@@ -1,0 +1,30 @@
+---
+ - hosts: local
+   gather_facts: no
+   tasks:
+     - name: Create Demo Clone FlexClone from SnapMirror
+       na_ontap_volume_clone:
+         state: present
+         username: "{{ netapp_username }}"
+         password: "{{ netapp_password }}"
+         hostname: "{{ netapp_hostname }}"
+         vserver: "svm_RHSAnsible"
+         parent_volume: "RHSAnsible_copy"
+         volume: "DemoClone"
+         parent_snapshot: "{{ latest_snap }}"
+     - name: Set Export Policy
+       na_ontap_volume:
+         state: present
+         name: "DemoClone"
+         policy: "export-svm_RHSAnsible-RHSNFS"
+         vserver: "svm_RHSAnsible"
+         hostname: "{{ netapp_hostname }}"
+         username: "{{ netapp_username }}"
+         password: "{{ netapp_password }}"
+
+ - hosts: netapp
+   gather_facts: no
+   tasks:
+     - name: Set Junction Path
+       raw: volume mount -vserver svm_RHSAnsible -volume DemoClone -junction-path /DemoClone
+       
