@@ -1,0 +1,10 @@
+---
+- name: This sets up an httpd webserver
+  hosts: tag_Env_Demo
+  become: yes
+  tasks:
+  - name: Install the httpd rpm
+    yum: name=httpd
+  - name: start the httpd service
+    service: name=httpd state=started
+    
