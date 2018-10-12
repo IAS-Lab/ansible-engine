@@ -1,0 +1,18 @@
+---
+ - hosts: netapp
+   gather_facts: no
+   tasks:
+     - name: Get NetApp Snapshot Info
+       raw: volume snapshot show -vserver svm_RHSAnsible -volume RHSAnsible_copy | grep weekly.*
+       register: ontap_snap_info
+
+     - debug:
+         var: ontap_snap_info.stdout_lines
+
+
+     - local_action: shell echo '{{ ontap_snap_info.stdout_lines }}' | sed -e s/\ /\\n/g | grep weekly | tail -1
+       register: result
+       
+     - local_action: debug msg={{result.stdout}}
+
+     - local_action: lineinfile path='/etc/ansible/group_vars/all' regexp='^latest_snap' line='latest_snap{{ ":" }} {{result.stdout}}'
