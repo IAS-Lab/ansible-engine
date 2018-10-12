@@ -1,0 +1,20 @@
+---
+- name: Import apache directory configuration
+  hosts: tag_Env_Demo
+  become: yes
+  tasks:
+   - name: Copy httpd.conf file
+     copy:
+       src: /rhs/httpd.conf
+       dest: /etc/httpd/conf/httpd.conf
+       owner: root
+       group: root
+       mode: 0644
+       remote_src: yes
+
+   - name: Change Apache NFS permissions
+     command: setsebool -P httpd_use_nfs 1
+
+   - name: start the httpd service
+     service: name=httpd state=restarted
+
