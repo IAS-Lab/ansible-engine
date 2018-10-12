@@ -1,0 +1,33 @@
+---
+# Basic provisioning example
+- name: Create AWS resources
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  tasks:
+  - name: Create an EC2 instance
+    ec2:
+      aws_access_key: "{{aws_access_key}}"
+      aws_secret_key: "{{aws_secret_key}}"
+      key_name: "{{key_name}}"
+      region: "{{aws_region}}"
+      group_id: "{{firewall_group_id}}"
+      instance_type: "{{instance_type}}"
+      vpc_subnet_id: "{{vpc_subnet_id}}"
+      image: "{{ami_id}}"
+      assign_public_ip: yes
+      wait: yes
+      volumes:
+        - device_name: /dev/sda1
+          volume_type: gp2
+          volume_size: 10
+          delete_on_termination: true
+      exact_count: 3
+      count_tag:
+         Env: Demo 
+      instance_tags:
+         Name: ansible-aws-rhs
+         Project: RHS-Demo
+         Env: Demo
+    register: ec2
+
