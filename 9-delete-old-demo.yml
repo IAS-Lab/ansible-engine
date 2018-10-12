@@ -1,0 +1,26 @@
+---
+ - name: Terminate tagged instances
+   hosts: tag_Env_Demo
+   tasks:
+    - ec2_metadata_facts:
+    - ec2:
+       aws_access_key: "{{aws_access_key}}"
+       aws_secret_key: "{{aws_secret_key}}"
+       key_name: "{{key_name}}"
+       state: absent
+       region: "{{aws_region}}"
+       instance_ids: "{{ ansible_ec2_instance_id }}"
+      delegate_to: localhost
+
+ - name: Delete Demo Clone 
+   hosts: localhost
+   gather_facts: no
+   tasks:
+    - na_cdot_volume:
+       state: absent
+       name: "DemoClone"
+       vserver: "svm_RHSAnsible"
+       hostname: "{{ netapp_hostname }}"
+       username: "{{ netapp_username }}"
+       password: "{{ netapp_password }}"
+  
