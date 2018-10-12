@@ -1,0 +1,8 @@
+---
+ - hosts: netapp
+   gather_facts: no
+   tasks:
+     - name: Get ONTAP Version
+       raw: version
+       register: ontap_version
+     - debug: var=ontap_version
